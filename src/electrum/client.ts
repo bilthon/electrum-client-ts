@@ -250,8 +250,11 @@ export class ElectrumClient extends SocketClient {
     );
     return this.request('blockchain.outpoint.unsubscribe', [hash, out]);
   }
-  blockchain_block_header(height, cpHeight = 0) {
-    return this.request('blockchain.block.header', [height, cpHeight]);
+  blockchain_block_header(height, cpHeight) {
+    if (cpHeight === undefined)
+      return this.request('blockchain.block.header', [height])
+    else
+      return this.request('blockchain.block.header', [height, cpHeight]);
   }
   blockchain_block_headers(startHeight, count, cpHeight = 0) {
     return this.request('blockchain.block.headers', [
