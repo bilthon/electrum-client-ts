@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "build": "tsc --build tsconfig.json",
-    "publush": "npm run build && npm publish --access public"
+    "publush": "npm run build && npm publish --access public",
+    "postinstall": "tsc --outdir ./dist"
   },
   "dependencies": {
     "socket.io": "^4.5.1",
