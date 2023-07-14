@@ -17,6 +17,7 @@
     "websocket": "^1.0.29"
   },
   "devDependencies": {
+    "@types/node": "^20.4.2",
     "chai": "^4.2.0",
     "electrum-host-parse": "^0.1.1",
     "eslint": "^6.1.0",
