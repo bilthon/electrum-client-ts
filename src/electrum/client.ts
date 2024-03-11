@@ -3,6 +3,8 @@ import { createPromiseResult, makeRequest } from './util';
 
 export const keepAliveInterval = 120 * 1000; // 2 minutes
 
+export const RETRY_INTERVAL = 10 * 1000; // 10 seconds
+
 export class ElectrumClient extends SocketClient {
   persistencePolicy;
   timeLastCall;
@@ -69,7 +71,7 @@ export class ElectrumClient extends SocketClient {
 
       this.callback_message_queue[id] = createPromiseResult(resolve, reject);
 
-      console.log('Send', content);
+      // console.log('Send', content);
       this.client.send(content + '\n');
     });
 
@@ -128,21 +130,20 @@ export class ElectrumClient extends SocketClient {
     // Stop keep alive.
     clearInterval(this.keepAliveHandle);
 
-    // do not reconnect
-    // setTimeout(() => {
-    //   if (
-    //     this.persistencePolicy != null &&
-    //     this.persistencePolicy.maxRetry > 0
-    //   ) {
-    //     this.reconnect();
-    //     this.persistencePolicy.maxRetry -= 1;
-    //   } else if (
-    //     this.persistencePolicy != null &&
-    //     this.persistencePolicy.callback != null
-    //   ) {
-    //     this.persistencePolicy.callback();
-    //   }
-    // }, 1000);
+    setTimeout(() => {
+      if (
+        this.persistencePolicy != null &&
+        this.persistencePolicy.maxRetry > 0
+      ) {
+        this.reconnect();
+        this.persistencePolicy.maxRetry -= 1;
+      } else if (
+        this.persistencePolicy != null &&
+        this.persistencePolicy.callback != null
+      ) {
+        this.persistencePolicy.callback();
+      }
+    }, RETRY_INTERVAL);
   }
 
   reconnect() {
