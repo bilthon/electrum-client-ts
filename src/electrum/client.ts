@@ -96,8 +96,8 @@ export class ElectrumClient extends SocketClient {
               console.error(`ping to server failed: [${err}]`);
               client.close(); // TODO: we should reconnect
 
-              setTimeout(() => {
-                client.reconnect();
+              setTimeout(async () => {
+                await client.reconnect();
               }, 500);
             });
           }
@@ -130,12 +130,12 @@ export class ElectrumClient extends SocketClient {
     // Stop keep alive.
     clearInterval(this.keepAliveHandle);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (
         this.persistencePolicy != null &&
         this.persistencePolicy.maxRetry > 0
       ) {
-        this.reconnect();
+        await this.reconnect();
         this.persistencePolicy.maxRetry -= 1;
       } else if (
         this.persistencePolicy != null &&
@@ -146,12 +146,11 @@ export class ElectrumClient extends SocketClient {
     }, RETRY_INTERVAL);
   }
 
-  reconnect() {
-    console.log('electrum reconnect');
+  async reconnect() {
     this.status = 0;
     this.close();
     try {
-      return this.connect(
+      await this.connect(
         this.clientName,
         this.protocolVersion,
         this.persistencePolicy
