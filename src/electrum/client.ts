@@ -131,17 +131,18 @@ export class ElectrumClient extends SocketClient {
     clearInterval(this.keepAliveHandle);
 
     setTimeout(async () => {
-      if (
-        this.persistencePolicy != null &&
-        this.persistencePolicy.maxRetry > 0
-      ) {
-        await this.reconnect();
-        this.persistencePolicy.maxRetry -= 1;
-      } else if (
-        this.persistencePolicy != null &&
-        this.persistencePolicy.callback != null
-      ) {
-        this.persistencePolicy.callback();
+      if (this.persistencePolicy != null) {
+        if (this.persistencePolicy.maxRetry === -1) {
+          // Infinite retries
+          await this.reconnect();
+        } else if (this.persistencePolicy.maxRetry > 0) {
+          // Finite retries
+          await this.reconnect();
+          this.persistencePolicy.maxRetry -= 1;
+        } else {
+          // End of retries
+          this?.persistencePolicy?.callback();
+        }
       }
     }, RETRY_INTERVAL);
   }
@@ -156,7 +157,8 @@ export class ElectrumClient extends SocketClient {
         this.persistencePolicy
       );
     } catch (e) {
-      console.log('Failed to reconnect: ' + e);
+      const remainingRetries = this?.persistencePolicy?.maxRetry ?? 'unknown';
+      console.log(`Failed to reconnect. Remaining retries: ${remainingRetries}, Error: ` + e);
     }
   }
 
