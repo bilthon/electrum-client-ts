@@ -14,13 +14,13 @@ Subscriptions and notifications are also supported, please see [example](example
 ## Install
 
 ```
-npm install --save @gemlinkofficial/electrum-client-ts
+npm install --save @bilthon/electrum-client-ts
 ```
 
 ## Usage
 
 ```js
-import { ElectrumClient } from "@gemlinkofficial/electrum-client-ts";
+import { ElectrumClient } from "@bilthon/electrum-client-ts";
 async function main() {
   const client = new ElectrumClient("electrum.bitaroo.net", 50002, "ssl");
 
@@ -48,3 +48,6 @@ See more [examples](example/).
 [Electrum Protocol]: https://electrumx.readthedocs.io/en/latest/protocol.html
 [Electrum Protocol methods]: https://electrumx.readthedocs.io/en/latest/protocol-methods.html
 [ElectrumX Server]: https://electrumx.readthedocs.io/en/latest/
+
+## Notice
+This is a fork of @gemlinkofficial/electrum-client-ts with some minor changes to the original code.
