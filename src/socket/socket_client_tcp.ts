@@ -6,6 +6,7 @@ export class TCPSocketClient {
   host: any;
   port: any;
   client: Socket;
+  errorHandler: (e: Error) => void;
   constructor(self, host, port, protocol, options) {
     let conn;
     switch (protocol) {
@@ -23,18 +24,27 @@ export class TCPSocketClient {
     this.port = port;
     initialize(self, conn);
     this.client = conn;
+    this.errorHandler = (e: Error) => {
+      console.error('Error: ', e?.message);
+    };
   }
 
   async connect() {
     const client = this.client;
 
     return new Promise((resolve, reject) => {
-      const errorHandler = (e) => reject(e);
-      client.connect(this.port, this.host, () => {
-        client.removeListener("error", errorHandler);
+      const onConnect = () => {
+        client.removeListener('error', this.errorHandler);
         resolve(true);
-      });
-      client.on("error", errorHandler);
+      };
+      const onError = (err: Error) => {
+        client.removeListener('connect', onConnect);
+        reject(err);
+      }
+      // Use once to automatically remove the listener after it fires
+      client.once('connect', onConnect);
+      client.once('error', onError);
+      client.connect(this.port, this.host);
     });
   }
 
