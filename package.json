@@ -1,6 +1,6 @@
 {
-  "name": "@gemlinkofficial/electrum-client-ts",
-  "version": "0.1.26",
+  "name": "@bilthon/electrum-client-ts",
+  "version": "0.1.27",
   "description": "Electrum protocol client for node.js and browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,13 +25,13 @@
     "fs": "0.0.1-security",
     "mocha": "^6.2.0"
   },
-  "homepage": "https://github.com/gemlink/electrum-client-ts#readme",
+  "homepage": "https://github.com/bilthon/electrum-client-ts#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/gemlink/electrum-client-ts.git"
+    "url": "git://github.com/bilthon/electrum-client-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/gemlink/electrum-client-ts/issues"
+    "url": "https://github.com/bilthon/electrum-client-ts/issues"
   },
   "keywords": [
     "client",
