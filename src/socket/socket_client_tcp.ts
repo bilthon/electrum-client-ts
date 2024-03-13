@@ -6,7 +6,6 @@ export class TCPSocketClient {
   host: any;
   port: any;
   client: Socket;
-  errorHandler: (e: Error) => void;
   constructor(self, host, port, protocol, options) {
     let conn;
     switch (protocol) {
@@ -24,9 +23,6 @@ export class TCPSocketClient {
     this.port = port;
     initialize(self, conn);
     this.client = conn;
-    this.errorHandler = (e: Error) => {
-      console.error('Error: ', e?.message);
-    };
   }
 
   async connect() {
@@ -34,7 +30,7 @@ export class TCPSocketClient {
 
     return new Promise((resolve, reject) => {
       const onConnect = () => {
-        client.removeListener('error', this.errorHandler);
+        client.removeListener('error', onError);
         resolve(true);
       };
       const onError = (err: Error) => {
